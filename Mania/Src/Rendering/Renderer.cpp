@@ -1,11 +1,9 @@
 #include "Renderer.h"
 #include "../StaticLibs/stb_image.h"
 
-Renderer::Renderer()
+Renderer::Renderer() :
+	m_shader("Test")
 {
-	m_pVertex = NULL;
-	m_renderableCount = 0;
-
 	glGenVertexArrays(1, &m_vao);
 	glGenBuffers(1, &m_vbo);
 	glGenBuffers(1, &m_ibo);
@@ -14,28 +12,13 @@ Renderer::Renderer()
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
 
-	const uint32 NUM_INDICES = MAX_RENDERABLES_PER_BATCH * 6;
+	Vector2f vertices[4] = { Vector2f(0.0f, 0.0f), Vector2f(0.0f, 1.0f), Vector2f(1.0f, 1.0f), Vector2f(1.0f, 0.0f) };
+	GLubyte indices[6] = { 0, 1, 2, 0, 2, 3 };
 
-	GLuint indices[NUM_INDICES];
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2f) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLubyte) * 6, indices, GL_STATIC_DRAW);
 
-	uint32 offset = 0;
-	for (uint32 i = 0; i < NUM_INDICES; i += 6)
-	{
-		indices[i] = offset + 0;
-		indices[i + 1] = offset + 1;
-		indices[i + 2] = offset + 2;
-
-		indices[i + 3] = offset + 0;
-		indices[i + 4] = offset + 2;
-		indices[i + 5] = offset + 3;
-
-		offset += 4;
-	}
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4 * MAX_RENDERABLES_PER_BATCH, NULL, GL_DYNAMIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * NUM_INDICES, indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Vertex::pos));
+	glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -44,56 +27,36 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	glDeleteVertexArrays(1, &m_vao);
-	glDeleteBuffers(1, &m_vbo);
-	glDeleteBuffers(1, &m_ibo);
+	
+}
+
+void Renderer::SetProjection(const Matrix4f & projection)
+{
+	m_shader.Bind();
+	m_shader.SetUniformMat4("Projection", projection);
 }
 
 void Renderer::StartFrame()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void Renderer::BeginBatch()
-{
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	m_pVertex = (Vertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	m_renderableCount = 0;
-}
-
-void Renderer::Submit(const RenderInfo & renderInfo)
-{
-	m_pVertex->pos = renderInfo.pos;
-	m_pVertex++;
-
-	m_pVertex->pos = Vector2f(renderInfo.pos.x, renderInfo.pos.y + renderInfo.size.y);
-	m_pVertex++;
-
-	m_pVertex->pos = renderInfo.pos + renderInfo.size;
-	m_pVertex++;
-
-	m_pVertex->pos = Vector2f(renderInfo.pos.x + renderInfo.size.x, renderInfo.pos.y);
-	m_pVertex++;
-
-	m_renderableCount++;
-}
-
-void Renderer::RenderBatch()
-{
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	glBindVertexArray(m_vao);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+	m_shader.Bind();
+}
 
-	glDrawElements(GL_TRIANGLES, m_renderableCount * 6, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDisableVertexAttribArray(0);
-	glBindVertexArray(0);
+void Renderer::Render(const RenderInfo & renderInfo)
+{
+	m_shader.SetUniformVec2("Pos", renderInfo.pos);
+	m_shader.SetUniformVec2("Size", renderInfo.size);
+	m_shader.SetUniformVec4("Color", renderInfo.color);
+	m_shader.BindTexture("Texture", renderInfo.texture);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, NULL);
 }
 
 void Renderer::EndFrame()
 {
+	glBindVertexArray(0);
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

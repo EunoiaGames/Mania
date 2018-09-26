@@ -138,19 +138,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Src\Core\Common.h" />
+    <ClInclude Include="Src\Core\DisplayInput.h" />
+    <ClInclude Include="Src\Math\GeneralMath.h" />
+    <ClInclude Include="Src\Math\Math.h" />
+    <ClInclude Include="Src\Math\Matrix.h" />
     <ClInclude Include="Src\Math\Vector.h" />
+    <ClInclude Include="Src\Rendering\Chart.h" />
     <ClInclude Include="Src\Rendering\Display.h" />
     <ClInclude Include="Src\Rendering\Renderer.h" />
     <ClInclude Include="Src\Rendering\Shader.h" />
+    <ClInclude Include="Src\Rendering\Skin.h" />
     <ClInclude Include="Src\Rendering\Texture.h" />
     <ClInclude Include="Src\StaticLibs\stb_image.h" />
+    <ClInclude Include="Src\Utils\FileReader.h" />
+    <ClInclude Include="Src\Utils\String.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\DisplayInput.cpp" />
     <ClCompile Include="Src\main.cpp" />
+    <ClCompile Include="Src\Math\Matrix.cpp" />
     <ClCompile Include="Src\Rendering\Display.cpp" />
     <ClCompile Include="Src\Rendering\Renderer.cpp" />
+    <ClCompile Include="Src\Rendering\Shader.cpp" />
     <ClCompile Include="Src\Rendering\Texture.cpp" />
     <ClCompile Include="Src\StaticLibs\stb_image.c" />
+    <ClCompile Include="Src\Utils\FileReader.cpp" />
+    <ClCompile Include="Src\Utils\String.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\Charts\Test.chart" />
+    <None Include="Res\Shaders\Test.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

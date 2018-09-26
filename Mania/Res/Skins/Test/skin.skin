@@ -1,0 +1,43 @@
+#general
+name : Default
+author : zach
+
+#notes
+note1 : Notes/note1.png
+note2 : Notes/note2.png
+note3 : Notes/note2.png
+note4 : Notes/note1.png
+receptor : Notes/receptor.png
+size : 80
+gap : 0
+
+#stage
+color : 0, 0, 0, 255
+alignment : left
+
+#accuracy
+miss : Accuracy/miss.png
+bad : Accuracy/bad.png
+good : Accuracy/good.png
+perfect : Accuracy/perfect.png
+marvelous : Accuracy/marvelous.png
+gradeF : Accuracy/gradeF.png
+gradeC : Accuracy/gradeC.png
+gradeB : Accuracy/gradeB.png
+gradeA : Accuracy/gradeA.png
+gradeS : Accuracy/gradeAA.png
+gradeSS : Accuracy/gradeAAA.png
+gradeSSS : Accuracy/gradeAAAA.png
+
+#font
+scoreNumbers0 : Font/score0.png
+scoreNumbers1 : Font/score1.png
+scoreNumbers2 : Font/score2.png
+scoreNumbers3 : Font/score3.png
+scoreNumbers4 : Font/score4.png
+scoreNumbers5 : Font/score5.png
+scoreNumbers6 : Font/score6.png
+scoreNumbers7 : Font/score7.png
+scoreNumbers8 : Font/score8.png
+scoreNumbers9 : Font/score9.png
+

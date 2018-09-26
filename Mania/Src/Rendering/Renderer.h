@@ -2,21 +2,15 @@
 
 #include "../Core/Common.h"
 #include <GL\glew.h>
-#include "../Math/Vector.h"
 #include <string>
 #include "Texture.h"
-
-#define MAX_RENDERABLES_PER_BATCH 100
-
-struct Vertex
-{
-	Vector2f pos;
-};
+#include "Shader.h"
 
 struct RenderInfo
 {
 	Vector2f pos;
 	Vector2f size;
+	Vector4f color;
 	Texture texture;
 };
 
@@ -26,16 +20,15 @@ public:
 	Renderer();
 	~Renderer();
 
+	void SetProjection(const Matrix4f& projection);
+
 	void StartFrame();
 
-	void BeginBatch();
-	void Submit(const RenderInfo& renderInfo);
-	void RenderBatch();
+	void Render(const RenderInfo& renderInfo);
 
 	void EndFrame();
 private:
-	Vertex* m_pVertex;
-	uint32 m_renderableCount;
+	Shader m_shader;
 
 	GLuint m_vao;
 	GLuint m_vbo;
